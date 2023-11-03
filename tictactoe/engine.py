@@ -6,22 +6,21 @@ Score = int
 
 
 class Engine:
-
     def __init__(self, ai: str, foe: str, level: int):
         self.ai = ai
         self.foe = foe
         self.level = level
 
-    def minimax(self, board: Board, ai_turn: bool, depth: int, alpha: float,
-                beta: float) -> tuple:
+    def minimax(
+        self, board: Board, ai_turn: bool, depth: int, alpha: float, beta: float
+    ) -> tuple:
         available_moves = board.empty_squares
         if len(available_moves) == board.size**2:
             return 0, random.choice(list(range(board.size**2)))
         if board.is_gameover() or depth >= self.level:
             return self.evaluate_board(board, depth), None
-
         if ai_turn:
-            max_eval = float('-inf')
+            max_eval = float("-inf")
             best_move = None
             for move in available_moves:
                 board.push(move, self.ai)
@@ -35,7 +34,7 @@ class Engine:
                     return max_eval, best_move
             return max_eval, best_move
         else:
-            min_eval = float('inf')
+            min_eval = float("inf")
             best_move = None
             for move in available_moves:
                 board.push(move, self.foe)
@@ -50,13 +49,12 @@ class Engine:
             return min_eval, best_move
 
     def evaluate_board(self, board: Board, depth: int) -> Score:
-        if board.winner() == self.ai:
+        if board.winner() == self.foe:
             return board.size**2 - depth
-        elif board.winner() == self.foe:
+        elif board.winner() == self.ai:
             return -1 * board.size**2 - depth
         return 0
 
     def evaluate_best_move(self, board: Board) -> Square:
-        best_move = self.minimax(board, True, 0, float('-inf'),
-                                 float('inf'))[1]
+        best_move = self.minimax(board, True, 0, float("-inf"), float("inf"))[1]
         return best_move
